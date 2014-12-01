@@ -66,11 +66,6 @@
 	[super encodeWithCoder:theCoder];
 }
 
-- (void)dealloc {
-    
-	[super dealloc];
-}
-
 
 #pragma mark -
 #pragma mark Drawing
@@ -101,7 +96,6 @@
         [line setLineWidth:1.0];
         [line stroke]; 
         [line closePath];
-        [line release];
     }
 }
 
@@ -173,7 +167,7 @@
 
 - (void)mouseDown:(NSEvent*)theEvent {
     
-	if(_isEnabled==NO)
+	if(self.isEnabled==NO)
 		return;
     
 	NSPoint aMousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil]; 
@@ -267,6 +261,11 @@
     
 	unichar aKey = [[theEvent characters] characterAtIndex:0];
     
+    if (theEvent.keyCode == 51 && _activeColorStop>0 && _activeColorStop!=NSNotFound) {
+        [self removeStopAtIndex:_activeColorStop];
+        return;
+    }
+    
 	switch(aKey) {
             
 		case NSBackTabCharacter:
@@ -331,7 +330,7 @@
 	}	
 	
 	NSInteger			aNumberOfStops = [_gradientValue numberOfColorStops];
-	NSMutableArray *	aCurrentColorList = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *	aCurrentColorList = [[NSMutableArray alloc] init];
 	CGFloat				aCurrentLocationList[aNumberOfStops];
     
 	// build lists of current stops and locations
@@ -348,7 +347,7 @@
 			aCurrentLocationList[i]=aLocation;
 	}
     
-	NSGradient * aNewGradient = [[[NSGradient alloc] initWithColors:aCurrentColorList atLocations:aCurrentLocationList colorSpace:[NSColorSpace genericRGBColorSpace]]autorelease];
+    NSGradient * aNewGradient = [[NSGradient alloc] initWithColors:aCurrentColorList atLocations:aCurrentLocationList colorSpace:[NSColorSpace genericRGBColorSpace]];
     
 	[self setGradientValue:aNewGradient];
 }
@@ -359,8 +358,8 @@
 	// when we get to a location larger than 'theLocation'
 	// we'll insert the new color before it
 	NSInteger			aNumberOfStops = [_gradientValue numberOfColorStops];
-	NSMutableArray *	aCurrentColorList = [[[NSMutableArray alloc] init] autorelease];
-	NSMutableArray *	aNewColorList = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *	aCurrentColorList = [[NSMutableArray alloc] init];
+	NSMutableArray *	aNewColorList = [[NSMutableArray alloc] init];
 	CGFloat				aCurrentLocationList[aNumberOfStops];
 	CGFloat				aNewLocationList[aNumberOfStops+1];
 	BOOL				aFoundSpotForNewStop = NO;
@@ -394,7 +393,7 @@
 		aNewLocationList[i+j] = aCurrentLocationList[i];	
 	}
 	
-	NSGradient * aNewGradient = [[[NSGradient alloc] initWithColors:aNewColorList atLocations:aNewLocationList colorSpace:[NSColorSpace genericRGBColorSpace]]autorelease];
+	NSGradient * aNewGradient = [[NSGradient alloc] initWithColors:aNewColorList atLocations:aNewLocationList colorSpace:[NSColorSpace genericRGBColorSpace]];
 	[self setGradientValue:aNewGradient];
 }
 
@@ -404,7 +403,7 @@
     
 	if(theIndex <= 0 || theIndex >= aNumberOfStops-1) return;
 	
-	NSMutableArray * aColorList = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray * aColorList = [[NSMutableArray alloc] init];
 	CGFloat aLocationList[aNumberOfStops-1];
 	
 	// rebuild the list from current gradient, skipping index from argument
@@ -423,7 +422,7 @@
 		}
 	}
 	
-	NSGradient * aNewGradient = [[[NSGradient alloc] initWithColors:aColorList atLocations:aLocationList colorSpace:[NSColorSpace genericRGBColorSpace]]autorelease];
+    NSGradient * aNewGradient = [[NSGradient alloc] initWithColors:aColorList atLocations:aLocationList colorSpace:[NSColorSpace genericRGBColorSpace]];
     
 	[self setGradientValue:aNewGradient];
 }
@@ -441,13 +440,10 @@
     
 	if(_gradientValue != theGradient) {
         
-		[_gradientValue release];
-        
 		if(theGradient==nil)
 			_gradientValue = [[NSGradient alloc] initWithStartingColor:[NSColor whiteColor] endingColor:[NSColor blackColor]];
 		else {
-            
-			_gradientValue = [theGradient retain];
+            _gradientValue = theGradient;
 			[self performAction];
 		}
         

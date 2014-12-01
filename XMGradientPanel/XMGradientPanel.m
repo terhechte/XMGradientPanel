@@ -76,7 +76,8 @@ static XMGradientPanel *sharedGradientPanel = nil;
         NSNib *cellNib = [[NSNib alloc] initWithNibNamed:@"GradientPanel" bundle:[NSBundle mainBundle]];
         NSArray *objects = nil;
                 
-        [cellNib instantiateNibWithOwner:nil topLevelObjects:&objects];
+        //[cellNib instantiateNibWithOwner:nil topLevelObjects:&objects];
+        [cellNib instantiateWithOwner:nil topLevelObjects:&objects];
         for(id object in objects) {
             
             if([object isKindOfClass:[self class]]) {
@@ -136,14 +137,6 @@ static XMGradientPanel *sharedGradientPanel = nil;
     [self setupSwatchWellsInView:self.swatchWellsView];
 }
 
-- (void)dealloc
-{
-    [_picker release]; _picker = nil;
-    [_gradient release]; _gradient = nil;
-    
-    [super dealloc];
-}
-
 - (void)performAction
 {
 	if([_target respondsToSelector:_action])
@@ -193,9 +186,6 @@ static XMGradientPanel *sharedGradientPanel = nil;
 - (void) setGradient: (NSGradient *)aGradient {
     
     if (aGradient != _gradient) {
-        
-        [aGradient retain];
-        [_gradient release];
         _gradient = aGradient;
     }
         
@@ -275,7 +265,7 @@ static XMGradientPanel *sharedGradientPanel = nil;
         [self initGradientWells];
     }
     
-    return [[NSKeyedUnarchiver unarchiveObjectWithFile:path] retain];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 }
 
 - (void) setGradients:(NSArray *)gradients {

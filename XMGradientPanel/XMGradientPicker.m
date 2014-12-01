@@ -85,13 +85,6 @@
     [theCoder encodeInteger:_numberOfTickMarks forKey:@"numberOfTickMarks"];
 }
 
-- (void)dealloc
-{
-	[_gradientValue release];
-	[super dealloc];
-}
-
-
 #pragma mark -
 #pragma mark Utilities
 
@@ -124,7 +117,7 @@
 
 - (BOOL) acceptsFirstResponder {
     
-	return _isEnabled;
+	return self.isEnabled;
 }
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
@@ -136,7 +129,7 @@
     
 	_activeColorStop = 0;
 	[self display];
-	return _isEnabled;
+	return self.isEnabled;
 }
 
 - (BOOL) resignFirstResponder {
@@ -148,7 +141,7 @@
 
 - (BOOL) canBecomeKeyView {
     
-	return _isEnabled;
+	return self.isEnabled;
 }
 
 - (void)mouseDown:(NSEvent*)theEvent {
@@ -202,13 +195,9 @@
     
 	if(_gradientValue != theGradient) {
         
-		[_gradientValue release];
-        
 		if(theGradient==nil)
 			_gradientValue = [[NSGradient alloc] initWithStartingColor:[NSColor whiteColor] endingColor:[NSColor blackColor]];
 		else {
-            
-			_gradientValue = [theGradient retain];
 			[self performAction];
 		}
         
@@ -244,7 +233,7 @@
 		aLocationList[i]=aLocation;
 	}
 	
-	NSGradient * aGradient = [[[NSGradient alloc] initWithColors:aColorList atLocations:aLocationList colorSpace:[NSColorSpace genericRGBColorSpace]]autorelease];
+	NSGradient * aGradient = [[NSGradient alloc] initWithColors:aColorList atLocations:aLocationList colorSpace:[NSColorSpace genericRGBColorSpace]];
     
 	[self setGradientValue:aGradient];
 }

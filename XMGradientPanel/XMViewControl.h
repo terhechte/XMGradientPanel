@@ -8,17 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface XMViewControl : NSView {
-    
-    BOOL					_isEnabled;
-
-    @private
-    NSObject *				_target;
-    SEL						_action;
-}
-
-
-@property (readwrite, assign) BOOL isEnabled;
+@interface XMViewControl : NSView 
+@property (readwrite, nonatomic, assign) BOOL isEnabled;
 @property (readwrite, assign) id target;
 @property (readwrite, assign) SEL action;
 

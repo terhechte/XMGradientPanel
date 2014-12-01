@@ -64,13 +64,6 @@
 	return nil;
 }
 
-- (void)dealloc {
-    
-    [_gradient release]; _gradient = nil;
-	[_outlineColor release], _outlineColor = nil;
-	[super dealloc];
-}
-
 - (void)drawRect:(NSRect)aRect {
 	
 	[super drawRect:[self bounds]];
@@ -209,12 +202,10 @@
     
 	if(_gradient != theGradient) {
         
-		[_gradient release];
-        
 		if(theGradient == nil)
 			_gradient = [[NSGradient alloc] initWithStartingColor:[NSColor whiteColor] endingColor:[NSColor blackColor]];
         
-		else _gradient = [theGradient retain];
+        else _gradient = theGradient;
         
 		[self update:self];
 	}

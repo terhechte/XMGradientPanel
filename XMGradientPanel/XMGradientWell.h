@@ -16,13 +16,7 @@
 
     XMGradientPanel *panel;
     NSGradient *_gradient;
-	SEL _action;
-	id _target;
     
-    BOOL _isActive;
-    BOOL _isBordered;
-    BOOL _isSwatch;
-        
     BOOL badSelection;
     BOOL multipleSelection;
     
@@ -33,7 +27,7 @@
 @property (assign) SEL action;
 @property (assign) id target;
 @property (assign) BOOL isActive;
-@property (assign) BOOL isBordered;
+@property (nonatomic, assign) BOOL isBordered;
 @property (assign) BOOL isSwatch;
 
 

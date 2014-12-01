@@ -13,19 +13,7 @@
 
 #define XMGradientPanelGradientChangedNotification @"XMGradientPanelGradientChangedNotification"
 
-@interface XMGradientPanel : NSPanel <NSSplitViewDelegate> {
-
-    XMGradientPicker * _picker;
-    NSGradient * _gradient;
-    
-    NSSplitView * splitView;
-    NSView * swatchWellsView;
-    XMGradientWell * previewSwatch;
-    
-    BOOL _isContinuous;
-    SEL _action;
-    id _target;
-}
+@interface XMGradientPanel : NSPanel <NSSplitViewDelegate>
 
 + (XMGradientPanel *)sharedGradientPanel;
 + (BOOL)sharedGradientPanelExists;
@@ -33,8 +21,8 @@
 @property (nonatomic, retain) NSGradient * gradient;
 @property (retain) IBOutlet XMGradientPicker * picker;
 @property (retain) IBOutlet XMGradientWell * previewSwatch;
-@property (assign) IBOutlet NSSplitView * splitView;
-@property (assign) IBOutlet NSView * swatchWellsView;
+@property (weak) IBOutlet NSSplitView * splitView;
+@property (weak) IBOutlet NSView * swatchWellsView;
 @property (assign) BOOL isContinuous;
 @property (assign) SEL action;
 @property (assign) id target;

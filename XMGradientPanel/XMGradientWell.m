@@ -26,33 +26,19 @@
     [self exposeBinding:@"gradient"];
 }
 
-@synthesize target = _target;
-@synthesize action = _action;
-@synthesize isActive = _isActive;
-@synthesize isSwatch = _isSwatch;
-@synthesize dragImage = _dragImage;
-
 
 - (id) initWithFrame:(NSRect)frameRect
 {
 	if((self=[super initWithFrame: frameRect]))
     {
-		_isBordered = YES;
+		self.isBordered = YES;
         _isSwatch = NO;
-        _gradient = [[NSGradient clearGradient] retain];
+        _gradient = [NSGradient clearGradient];
     }
     
     [self registerForDraggedTypes:[self pasteboardTypes]];
 	return self;
 }
-
-- (void) dealloc
-{
-    [_gradient release]; _gradient = nil;
-    [_dragImage release]; _dragImage = nil;
-	[super dealloc];
-}
-
 
 #pragma mark -
 #pragma mark Drawing and mouse
@@ -63,12 +49,11 @@
     NSColor * lightGrey = [NSColor colorWithCalibratedWhite:0.9 alpha:1.0];
     NSColor * midGrey = [NSColor colorWithCalibratedWhite:0.85 alpha:1.0];
 
-    return [[[NSGradient alloc] initWithColorsAndLocations:
+    return [[NSGradient alloc] initWithColorsAndLocations:
      light, 0.0, 
      lightGrey, 0.85, 
      midGrey, 0.85, 
-     light, 0.9, 
-     nil] autorelease];
+     light, 0.9, nil];
 }
 
 - (id) controlActiveBackgroundGradient; {
@@ -77,12 +62,12 @@
     NSColor * mid = [NSColor colorWithCalibratedWhite:0.7 alpha:1.0];
     NSColor * darkGrey = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0];
 
-    return [[[NSGradient alloc] initWithColorsAndLocations:
+    return [[NSGradient alloc] initWithColorsAndLocations:
      mid, 0.0, 
      darkGrey, 0.88, 
      mid, 0.9, 
      midGrey, 1.0, 
-     nil] autorelease];
+            nil];
 }
 
 - (void) drawRect:(NSRect)rect
@@ -268,12 +253,7 @@
 
 - (BOOL) isOpaque {
     
-    return _isBordered; 
-}
-
-- (BOOL) isBordered {
-    
-    return _isBordered; 
+    return self.isBordered;
 }
 
 - (void)performAction {
@@ -292,15 +272,16 @@
 - (void) setGradient:(NSGradient *)gradient {
     
     if (_gradient != gradient) {
-        [_gradient release];
-        _gradient = [gradient retain];
+        _gradient = gradient;
         [self setNeedsDisplay:YES];
     }
 }
 
 - (void) setIsBordered:(BOOL)bordered
 {
-	_isBordered = bordered;
+    [self willChangeValueForKey:@"isBordered"];
+	self->_isBordered = bordered;
+    [self didChangeValueForKey:@"isBordered"];
 	[self setNeedsDisplay];
 }
 
@@ -331,7 +312,7 @@
 {
 	self = [super initWithCoder:aDecoder];
         
-    _gradient = [[aDecoder decodeObjectForKey:@"NSGradient"] retain];
+    _gradient = [aDecoder decodeObjectForKey:@"NSGradient"];
     _isBordered = [aDecoder decodeBoolForKey:@"isBordered"];
     _isSwatch = [aDecoder decodeBoolForKey:@"isSwatch"];
 

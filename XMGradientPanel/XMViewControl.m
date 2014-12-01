@@ -10,9 +10,6 @@
 
 @implementation XMViewControl
 
-@synthesize target = _target;
-@synthesize action = _action;
-
 #pragma mark -
 #pragma mark Setup
 
@@ -21,7 +18,7 @@
 	if(![super initWithFrame:theFrame])
 		return nil;
     
-	_isEnabled = YES;	
+	self.isEnabled = YES;
 	return self;
 }
 
@@ -30,7 +27,7 @@
 	if (![super initWithCoder:theCoder])
 		return nil;
     
-	_isEnabled = YES;
+	self.isEnabled = YES;
 	return self;
 }
 
@@ -68,14 +65,12 @@
 #pragma mark -
 #pragma mark Accessors
 
--(BOOL) isEnabled {
-    
-    return _isEnabled;
-}
-
 - (void)setIsEnabled:(BOOL)theBool {
     
+    [self willChangeValueForKey:@"isEnabled"];
 	_isEnabled = theBool;
+    [self didChangeValueForKey:@"isEnabled"];
+    
 	if(theBool==NO && [[self window] firstResponder]==self)
 		[[self window] makeFirstResponder:nil];
     
